@@ -38,6 +38,12 @@ async function run() {
             res.send(result)
         })
 
+        app.get('/product/:id', async(req, res) =>{
+            const Id = req.params.id
+            const query = {_id: new ObjectId(Id)}
+            const result = await productCollection.findOne(query)
+            res.send(result)
+        })
 
 
         // Send a ping to confirm a successful connection
