@@ -32,7 +32,9 @@ async function run() {
         await client.connect();
 
         const productCollection = client.db('OnlineStoreDB').collection('products')
+        const CartCollection = client.db('OnlineStoreDB').collection('productCart')
         
+        // Product Manage
         app.get('/products', async(req, res) =>{
             const result = await productCollection.find().toArray()
             res.send(result)
@@ -42,6 +44,30 @@ async function run() {
             const Id = req.params.id
             const query = {_id: new ObjectId(Id)}
             const result = await productCollection.findOne(query)
+            res.send(result)
+        })
+
+
+        // Card Ites manage
+
+        app.post('/add-cart', async(req, res) =>{
+            const CardData = req.body
+            const result = await CartCollection.insertOne(CardData)
+            res.send(result)
+        })
+
+        app.get('/cart-items/:email', async(req, res) =>{
+            const email = req.params.email
+            const query = {user: email}
+            const result = await CartCollection.find(query).toArray()
+            res.send(result)
+        })
+
+        app.delete('/cart-product-delete/:id', async(req, res) =>{
+            const Id = req.params.id
+            console.log(Id)
+            const query = {_id: new ObjectId(Id)}
+            const result = await CartCollection.deleteOne(query)
             res.send(result)
         })
 
